@@ -1,0 +1,83 @@
+version: 2.1
+
+executors:
+  docker:
+    docker:
+      - image: cimg/node:16.13.1
+
+# orbs:
+
+# commands:
+
+jobs:
+  build:
+    executor:
+      name: docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+              - v1-dependencies-{{ checksum "yarn.lock" }}-{{ .Branch }}
+              - v1-dependencies-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}-{{ .Branch }}
+      - run:
+          name: Linting
+          command: yarn lint
+      - run:
+          name: Testing
+          command: yarn test
+      - run:
+          name: Building
+          command: yarn build
+
+  publish:
+    executor:
+      name: docker
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+              - v1-dependencies-{{ checksum "yarn.lock" }}-{{ .Branch }}
+              - v1-dependencies-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}-{{ .Branch }}
+      - run:
+          name: Build and test package
+          command: |
+            yarn lint
+            yarn test
+            yarn build
+      - run:
+          name: Publish package
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+            npm publish dist
+
+workflows:
+  feature-fix:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: /(feature|feat|fix|release-fix|hot-fix)\/.+/
+      
+  release:
+    jobs:
+      - publish:
+          filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+(-rc.\d+|)$/
+            branches:
+              ignore: /.*/
+

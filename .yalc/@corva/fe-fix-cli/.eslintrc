@@ -1,0 +1,14 @@
+{
+  "extends": "@corva/eslint-config-browser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    }
+  },
+  "rules": {
+    "no-console": "off",
+    "no-await-in-loop": "off",
+    "no-restricted-syntax": "off"
+  }
+}

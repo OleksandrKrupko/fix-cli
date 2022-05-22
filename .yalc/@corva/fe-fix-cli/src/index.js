@@ -17,7 +17,7 @@ const program = new Command();
 
 async function main() {
   program
-    .command('apply')
+    .command('apply-fix')
     .description('Applies your fix to other envs by creating PRs to these envs')
     .action(async () => {
       const mainFixBranch = await gitUtils.getCurrentBranchName();
@@ -28,14 +28,11 @@ async function main() {
       );
 
       if (!mainFixEnvConfig) {
-        console.error(
-          `Current branch name doesn't match any envs listend in the config file`
-        );
+        console.error(`Current branch name doesn't match any envs listend in the config file`);
         process.exit(1);
       }
 
-      const fixTicketId =
-        mainFixEnvConfig.getTicketIdFromFixBranch(mainFixBranch);
+      const fixTicketId = mainFixEnvConfig.getTicketIdFromFixBranch(mainFixBranch);
 
       if (!fixTicketId) {
         console.error('Cannot get ticket ID from the branch name');
@@ -67,11 +64,9 @@ async function main() {
         }
       }
 
-      for (let envName of mainFixEnvConfig.applyFixForEnvs) {
+      for (const envName of mainFixEnvConfig.applyFixForEnvs) {
         try {
-          const envToApplyFixConfig = envsConfigs.find(
-            config => config.name === envName
-          );
+          const envToApplyFixConfig = envsConfigs.find(config => config.name === envName);
           console.log(`checkout to ${envToApplyFixConfig.name} branch`);
 
           let envBaseBranch;
@@ -83,16 +78,14 @@ async function main() {
 
           await git.checkout(envBaseBranch);
           await git.pull();
-          const fixBranchName =
-            envToApplyFixConfig.getFixBranchNameForTicketId(fixTicketId);
+          const fixBranchName = envToApplyFixConfig.getFixBranchNameForTicketId(fixTicketId);
           console.log('Creating a new fix branch', fixBranchName);
 
           try {
             await git.checkoutLocalBranch(fixBranchName);
           } catch (error) {
             if (error.message.includes('already exists')) {
-              const isRemoveExistingBranch =
-                await prompts.askToDeleteExistingBranch(fixBranchName);
+              const isRemoveExistingBranch = await prompts.askToDeleteExistingBranch(fixBranchName);
 
               if (isRemoveExistingBranch) {
                 await git.deleteLocalBranch(fixBranchName, true);
@@ -133,12 +126,11 @@ async function main() {
             );
           }
         } catch (error) {
-          console.error('Unknown error occured: ', fixBranchName);
+          console.error('Unknown error occured:');
         }
       }
 
       console.log(`Returning to the original fix branch: ${mainFixBranch}`);
-
       await git.checkout(mainFixBranch);
     });
 

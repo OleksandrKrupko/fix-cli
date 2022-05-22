@@ -1,0 +1,40 @@
+{
+  "name": "@corva/fe-fix-cli",
+  "version": "0.1.4",
+  "private": false,
+  "description": "A CLI to simplify hot fixing process",
+  "main": "index.js",
+  "repository": "git@github.com:corva-ai/corva-dc-platform-shared.git",
+  "author": "Oleksandr Krupko <oleksandr.krupko@corva.ai>",
+  "license": "MIT",
+  "bin": {
+    "@corva/fe-fix-cli": "./src/index.js"
+  },
+  "dependencies": {
+    "commander": "^9.2.0",
+    "gh": "^2.8.9",
+    "inquirer": "^8.2.4",
+    "react": "^17.0.2",
+    "simple-git": "^3.7.1",
+    "standard-version": "^9.5.0"
+  },
+  "scripts": {
+    "lint": "eslint --cache ./src/",
+    "lint-staged": "lint-staged",
+    "test": "echo Add test command here",
+    "build": "echo Add build command here",
+    "postinstall": "./scripts/setGitConfigs.sh",
+    "release": "git fetch --tags && standard-version"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "standard-version": {
+    "skip": {
+      "tag": true
+    }
+  },
+  "yalcSig": "0142766902cc3fefe7786f1e7c752dce"
+}

@@ -1,0 +1,11 @@
+TYPE(ID): summary
+
+# [optional body with more detailed description]
+
+# BREAKING CHANGE: refactor uses JavaScript features not available in Node <14. Please upgrade to at least v14
+# BREAKING CHANGE: Chip component default size was updated. To use the old default size you need to add size="small" prop  
+
+# In case of commiting a breaking change, each change should be prefixed with BREAKING CHANGE
+# The changelog will be generated based on this commit message, it's quality depends on your description
+# See available commit types in git-conventional-commits.json
+
