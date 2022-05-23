@@ -1,16 +1,16 @@
 {
   "name": "release-cli-tool",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "apply": "@corva/fe-fix-cli apply-fix"
+    "apply": "corva-fe-fix-cli apply-fix"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@corva/fe-fix-cli": "file:.yalc/@corva/fe-fix-cli",
+    "@corva/fe-fix-cli": "^0.1.4",
     "commander": "^9.2.0",
     "gh": "^2.8.9",
     "inquirer": "^8.2.4",
